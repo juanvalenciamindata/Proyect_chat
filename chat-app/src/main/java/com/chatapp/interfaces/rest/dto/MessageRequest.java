@@ -7,11 +7,10 @@ public class MessageRequest {
 
     public MessageRequest() {}
 
-    public String getUserId() {
-        return userId;
-    }
+    public String getUserId() {return userId;}
+    public String getContent() {return content;}
 
-    public String getContent() {
-        return content;
-    }
+    public void setUserId(String userId) {this.userId = userId;}
+
+    public void setContent(String content) {this.content = content;}
 }

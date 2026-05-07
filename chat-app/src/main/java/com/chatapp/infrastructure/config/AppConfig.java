@@ -7,8 +7,6 @@ import com.chatapp.application.usecase.SendMessageUseCase;
 import com.chatapp.application.usecase.SendMessageService;
 import com.chatapp.application.usecase.GetMessageHistoryUseCase;
 import com.chatapp.application.usecase.GetMessagesByUserUseCase;
-
-import com.chatapp.infrastructure.memory.InMemoryMessageRepository;
 import com.chatapp.infrastructure.kafka.KafkaMessagePublisher;
 
 import org.springframework.context.annotation.Bean;
@@ -27,10 +25,6 @@ public class AppConfig {
         return new SendMessageService(repository, publisher);
     }
 
-    @Bean
-    public MessageRepositoryPort messageRepository() {
-        return new InMemoryMessageRepository();
-    }
 
     @Bean
     public MessageEventPublisherPort messageEventPublisherPort(
