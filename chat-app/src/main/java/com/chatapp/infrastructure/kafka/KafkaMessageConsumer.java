@@ -5,7 +5,9 @@ import com.chatapp.domain.valueobject.Content;
 import com.chatapp.domain.valueobject.UserId;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.kafka.annotation.KafkaListener;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class KafkaMessageConsumer {
 
     private final SendMessageUseCase sendMessageUseCase;
@@ -29,7 +31,7 @@ public class KafkaMessageConsumer {
                     new Content(event.getContent())
             );
         } catch (Exception e) {
-            throw new RuntimeException("Error consuming chat message", e);
+            log.error("Error de procesamiento del mensaje en kafka");
         }
     }
 }

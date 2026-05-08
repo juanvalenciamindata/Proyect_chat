@@ -2,6 +2,7 @@ package com.chatapp.application.usecase;
 
 import com.chatapp.application.ports.MessageEventPublisherPort;
 import com.chatapp.application.ports.MessageRepositoryPort;
+import com.chatapp.domain.exception.DomainException;
 import com.chatapp.domain.model.ChatMessage;
 import com.chatapp.domain.valueobject.Content;
 import com.chatapp.domain.valueobject.UserId;
@@ -20,11 +21,15 @@ public class SendMessageService implements SendMessageUseCase {
     @Override
     public ChatMessage execute(UserId userId, Content content) {
 
-        ChatMessage message = ChatMessage.create(userId, content);
+        try{
+            ChatMessage message = ChatMessage.create(userId, content);
 
-        repository.save(message);
-        eventPublisher.publish(message);
+            repository.save(message);
+            eventPublisher.publish(message);
 
-        return message;
+            return message;
+        } catch (Exception e){
+            throw new DomainException("Error processing message", e);
+        }
     }
 }
