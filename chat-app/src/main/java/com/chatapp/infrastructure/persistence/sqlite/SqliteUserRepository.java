@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public class SqliteUserRepository implements UserRepositoryPort {
 
-    private static final String URL = "jdbc:sqlite:chat.db";
+    private static final String URL = "jdbc:sqlite:./chat.db";
 
     public SqliteUserRepository() {
         init();
@@ -50,6 +50,7 @@ public class SqliteUserRepository implements UserRepositoryPort {
             ps.executeUpdate();
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException(
                     "Error saving user",
                     e

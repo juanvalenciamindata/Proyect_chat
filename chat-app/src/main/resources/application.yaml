@@ -3,7 +3,7 @@ spring:
     name: chat-app
 
   datasource:
-    url: jdbc:sqlite:chat.db
+    url: jdbc:sqlite:./chat.db
     driver-class-name: org.sqlite.JDBC
 
   kafka:
