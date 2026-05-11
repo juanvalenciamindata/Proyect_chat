@@ -1,12 +1,16 @@
 package com.chatapp.domain.valueobject;
 
-import com.chatapp.domain.exception.DomainException;
+import java.util.UUID;
 
 public record UserId(String value) {
 
     public UserId {
         if (value == null || value.isBlank()) {
-            throw new DomainException("UserId no puede ser vacío");
+            throw new IllegalArgumentException("UserId no puede ser vacío");
         }
+    }
+
+    public static UserId generate() {
+        return new UserId(UUID.randomUUID().toString());
     }
 }

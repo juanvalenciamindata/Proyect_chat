@@ -2,7 +2,7 @@ package com.chatapp.application.usecase;
 
 import com.chatapp.application.ports.MessageEventPublisherPort;
 import com.chatapp.application.ports.MessageRepositoryPort;
-import com.chatapp.domain.exception.DomainException;
+import com.chatapp.application.ports.UserRepositoryPort;
 import com.chatapp.domain.model.ChatMessage;
 import com.chatapp.domain.valueobject.Content;
 import com.chatapp.domain.valueobject.UserId;
@@ -11,25 +11,36 @@ public class SendMessageService implements SendMessageUseCase {
 
     private final MessageRepositoryPort repository;
     private final MessageEventPublisherPort eventPublisher;
+    private final UserRepositoryPort userRepository;
 
-    public SendMessageService(MessageRepositoryPort repository,
-                              MessageEventPublisherPort eventPublisher) {
+    public SendMessageService(
+            MessageRepositoryPort repository,
+            MessageEventPublisherPort eventPublisher,
+            UserRepositoryPort userRepository
+    ) {
         this.repository = repository;
         this.eventPublisher = eventPublisher;
+        this.userRepository = userRepository;
     }
 
     @Override
     public ChatMessage execute(UserId userId, Content content) {
 
-        try{
-            ChatMessage message = ChatMessage.create(userId, content);
+        // Validacion critica
+        userRepository.findById(userId)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found: " + userId.value())
+                );
 
-            repository.save(message);
-            eventPublisher.publish(message);
+        // Crear mensaje
+        ChatMessage message = ChatMessage.create(userId, content);
 
-            return message;
-        } catch (Exception e){
-            throw new DomainException("Error processing message", e);
-        }
+        // Persistir
+        repository.save(message);
+
+        // Publicar evento
+        eventPublisher.publish(message);
+
+        return message;
     }
 }
