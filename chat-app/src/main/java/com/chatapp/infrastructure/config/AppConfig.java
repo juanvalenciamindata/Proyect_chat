@@ -1,7 +1,15 @@
 package com.chatapp.infrastructure.config;
 
-import com.chatapp.application.ports.*;
-import com.chatapp.application.usecase.*;
+import com.chatapp.application.ports.MessageEventPublisherPort;
+import com.chatapp.application.ports.MessageRepositoryPort;
+import com.chatapp.application.ports.UserRepositoryPort;
+
+import com.chatapp.application.usecase.GetMessageHistoryUseCase;
+import com.chatapp.application.usecase.GetMessagesByUserUseCase;
+import com.chatapp.application.usecase.LoginUserUseCase;
+import com.chatapp.application.usecase.SendMessageService;
+import com.chatapp.application.usecase.SendMessageUseCase;
+
 import com.chatapp.infrastructure.kafka.KafkaMessagePublisher;
 import com.chatapp.infrastructure.persistence.sqlite.SqliteUserRepository;
 import com.chatapp.infrastructure.security.TokenStore;
@@ -15,16 +23,21 @@ import org.springframework.kafka.core.KafkaTemplate;
 @Configuration
 public class AppConfig {
 
-    // MESSAGE USE CASE
+    // 🔥 SEND MESSAGE
     @Bean
     public SendMessageUseCase sendMessageUseCase(
             MessageRepositoryPort repository,
-            MessageEventPublisherPort publisher
+            MessageEventPublisherPort publisher,
+            UserRepositoryPort userRepository
     ) {
-        return new SendMessageService(repository, publisher);
+        return new SendMessageService(
+                repository,
+                publisher,
+                userRepository
+        );
     }
 
-    // LOGIN USE CASE
+    // 🔥 LOGIN
     @Bean
     public LoginUserUseCase loginUserUseCase(
             UserRepositoryPort userRepository
@@ -32,7 +45,7 @@ public class AppConfig {
         return new LoginUserUseCase(userRepository);
     }
 
-    // HISTORY
+    // 🔥 HISTORY
     @Bean
     public GetMessageHistoryUseCase getMessageHistoryUseCase(
             MessageRepositoryPort repository
@@ -40,7 +53,7 @@ public class AppConfig {
         return new GetMessageHistoryUseCase(repository);
     }
 
-    // BY USER
+    // 🔥 MESSAGES BY USER
     @Bean
     public GetMessagesByUserUseCase getMessagesByUserUseCase(
             MessageRepositoryPort repository
@@ -48,28 +61,31 @@ public class AppConfig {
         return new GetMessagesByUserUseCase(repository);
     }
 
-    // USER REPOSITORY
+    // 🔥 USER REPOSITORY (SQLite)
     @Bean
     public UserRepositoryPort userRepositoryPort() {
         return new SqliteUserRepository();
     }
 
-    // TOKEN STORE
+    // 🔥 TOKEN STORE
     @Bean
     public TokenStore tokenStore() {
         return new TokenStore();
     }
 
-    // KAFKA
+    // 🔥 KAFKA EVENT PUBLISHER
     @Bean
     public MessageEventPublisherPort messageEventPublisherPort(
             KafkaTemplate<String, String> kafkaTemplate,
             ObjectMapper objectMapper
     ) {
-        return new KafkaMessagePublisher(kafkaTemplate, objectMapper);
+        return new KafkaMessagePublisher(
+                kafkaTemplate,
+                objectMapper
+        );
     }
 
-    // JSON
+    // 🔥 OBJECT MAPPER
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
