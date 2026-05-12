@@ -1,0 +1,97 @@
+Documentación, test en postman
+
+Realizar envió de registro de usuario, desde el endpoint:
+Método: POST
+
+Url: http://localhost:8080/users
+
+Body json:
+{
+  "password": "1234"
+}
+
+response:
+
+{
+    "userId": "bf7ad6bb-e42b-447f-bf30-76ec1d44fae1" // userId
+}
+
+------------------------------------------------------------------------------------------
+
+Realizar envió de login de usuario, desde el endpoint:
+Método: POST
+
+Url:  http://localhost:8080/auth/login
+
+Body json:
+{
+  "userId": "fc2b0a42-b52e-4677-9d79-7dfa72b942e4",  // userID
+  "password": "1234"
+}
+
+response:
+{
+    "token": "e787f9db-e61f-4394-a0c6-ab9e1abcfbd0" //token de acceso
+}
+
+--------------------------------------------------------------------------------------------
+
+Realizar envió de mensaje, desde el endpoint:
+Método: POST
+
+url:  http://localhost:8080/messages
+
+Headers:
+
+key: Authorization
+Value: e787f9db-e61f-4394-a0c6-ab9e1abcfbd0
+
+Body json:
+{
+  "userId": "fc2b0a42-b52e-4677-9d79-7dfa72b942e4",
+  "content": "Hola mundo"
+}
+
+response:
+
+{
+    "id": "fd17b997-1183-41d6-8fd8-bc27406d6b8f",
+    "userId": "fc2b0a42-b52e-4677-9d79-7dfa72b942e4",
+    "content": "Hola mundo",
+    "timestamp": "2026-05-12T08:32:59.417162800Z"
+}
+-------------------------------------------------------------------------------------------
+
+Obtener historial de mensajes, desde el endpoint:
+Método: GET
+
+Url: http://localhost:8080/messages/history
+
+Headers:
+
+key: Authorization
+Value: e787f9db-e61f-4394-a0c6-ab9e1abcfbd0
+
+Body json:
+            none
+response:
+[
+    {
+        "id": "3b95c969-0697-4ff2-b0c3-18fd925cd6ad",
+        "userId": "fc2b0a42-b52e-4677-9d79-7dfa72b942e4",
+        "content": "Hola mundo",
+        "timestamp": "2026-05-11T08:29:51.203760200Z"
+    },
+    {
+        "id": "fd17b997-1183-41d6-8fd8-bc27406d6b8f",
+        "userId": "fc2b0a42-b52e-4677-9d79-7dfa72b942e4",
+        "content": "Hola mundo",
+        "timestamp": "2026-05-12T08:32:59.417162800Z"
+    }
+]
+--------------------------------------------------------------------
+
+Conexon WebSocket
+
+Url: ws://localhost:8080/ws-chat
+
