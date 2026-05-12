@@ -3,8 +3,11 @@ package com.chatapp.infrastructure.kafka;
 import com.chatapp.application.ports.MessageEventPublisherPort;
 import com.chatapp.domain.model.ChatMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.annotation.Primary;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Component;
 
+@Component
 public class KafkaMessagePublisher implements MessageEventPublisherPort {
 
     private final KafkaTemplate<String, String> kafkaTemplate;

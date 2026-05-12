@@ -6,7 +6,9 @@ import com.chatapp.domain.valueobject.UserId;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.kafka.annotation.KafkaListener;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
+@Component
 @Slf4j
 public class KafkaMessageConsumer {
 
@@ -19,7 +21,7 @@ public class KafkaMessageConsumer {
         this.objectMapper = objectMapper;
     }
 
-    @KafkaListener(topics = "chat-global-topic")
+    @KafkaListener(topics = "chat-global-topic", groupId = "chat-group")
     public void consume(String messageJson) {
 
         try {
@@ -31,7 +33,6 @@ public class KafkaMessageConsumer {
                     new Content(event.getContent())
             );
         } catch (Exception e) {
-            log.error("Error de procesamiento del mensaje en kafka");
-        }
+            log.error("Error de procesamiento del mensaje en kafka", e);        }
     }
 }

@@ -73,18 +73,6 @@ public class AppConfig {
         return new TokenStore();
     }
 
-    // 🔥 KAFKA EVENT PUBLISHER
-    @Bean
-    public MessageEventPublisherPort messageEventPublisherPort(
-            KafkaTemplate<String, String> kafkaTemplate,
-            ObjectMapper objectMapper
-    ) {
-        return new KafkaMessagePublisher(
-                kafkaTemplate,
-                objectMapper
-        );
-    }
-
     // 🔥 OBJECT MAPPER
     @Bean
     public ObjectMapper objectMapper() {
