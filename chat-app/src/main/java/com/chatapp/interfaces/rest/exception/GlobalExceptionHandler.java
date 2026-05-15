@@ -1,6 +1,7 @@
 package com.chatapp.interfaces.rest.exception;
 
 import com.chatapp.domain.exception.DomainException;
+import com.chatapp.domain.exception.UserNotFoundException;
 import com.chatapp.interfaces.rest.dto.ErrorResponse;
 
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,11 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleDomainException(DomainException ex) {
         return new ErrorResponse(ex.getMessage(), 400);
+    }
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleUserNotFound(UserNotFoundException ex) {
+        return new ErrorResponse(ex.getMessage(), 404);
     }
 
     @ExceptionHandler(Exception.class)

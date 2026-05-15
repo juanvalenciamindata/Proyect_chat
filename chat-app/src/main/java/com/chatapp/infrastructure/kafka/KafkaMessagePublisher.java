@@ -1,6 +1,7 @@
 package com.chatapp.infrastructure.kafka;
 
 import com.chatapp.application.ports.MessageEventPublisherPort;
+import com.chatapp.domain.exception.MessagePublishException;
 import com.chatapp.domain.model.ChatMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Primary;
@@ -33,7 +34,7 @@ public class KafkaMessagePublisher implements MessageEventPublisherPort {
             );
 
         } catch (Exception e) {
-            throw new RuntimeException("Error publishing chat message event", e);
+            throw new MessagePublishException("Kafka publish failed");
         }
     }
 }

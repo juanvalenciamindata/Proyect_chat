@@ -3,6 +3,8 @@ package com.chatapp.application.usecase;
 import com.chatapp.application.ports.MessageEventPublisherPort;
 import com.chatapp.application.ports.MessageRepositoryPort;
 import com.chatapp.application.ports.UserRepositoryPort;
+import com.chatapp.domain.exception.MessagePublishException;
+import com.chatapp.domain.exception.UserNotFoundException;
 import com.chatapp.domain.model.ChatMessage;
 import com.chatapp.domain.valueobject.Content;
 import com.chatapp.domain.valueobject.UserId;
@@ -29,7 +31,7 @@ public class SendMessageService implements SendMessageUseCase {
         // Validacion critica
         userRepository.findById(userId)
                 .orElseThrow(() ->
-                        new RuntimeException("User not found: " + userId.value())
+                        new UserNotFoundException(userId.value())
                 );
 
         // Crear mensaje
@@ -39,8 +41,12 @@ public class SendMessageService implements SendMessageUseCase {
         repository.save(message);
 
         // Publicar evento
-        eventPublisher.publish(message);
-
+        try {
+            // 🔥 Evento
+            eventPublisher.publish(message);
+        } catch (Exception e) {
+            throw new MessagePublishException("Error publishing message");
+        }
         return message;
     }
 }
